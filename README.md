@@ -1,4 +1,4 @@
-asteroids
+Asteroidy
 =========
 
 Projekt na PN.
