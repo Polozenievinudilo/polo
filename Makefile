@@ -20,4 +20,4 @@ $(OBJECTS): obj/%.o : src/%.c
 	$(CC) -c $< -o $@
 
 clean:
-	rm -f obj/*.o
+	rm -f obj/*.o asteroids
