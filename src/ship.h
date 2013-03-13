@@ -15,14 +15,16 @@
 
 typedef struct ship {
     vector position;
-    float angle, speed, time;
-    int life;
+    float angle, // direction of a ship
+          speed, // speed of a ship
+          time; // time left to be touchable by asteroids
+    int life; // lives
 } ship;
 
-ship new_ship(vector);
+ship new_ship(vector); // createes new ship | params: vector | returns: ship
 
-void turn_left(ship *);
-void turn_right(ship *);
+void turn_left(ship *); // turns left | params: pointer to a ship
+void turn_right(ship *); // turns right | params: pointer to a ship
 
 #endif	/* SHIP_H */
 
