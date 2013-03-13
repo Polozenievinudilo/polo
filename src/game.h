@@ -22,6 +22,7 @@ typedef enum {
 } status;
 
 typedef struct game {
+    int score;
     ship Ship;
     vector Size;
     status status;
@@ -34,7 +35,7 @@ void del_game(game *);
 bool font();
 
 void update_game(game *);
-void update_collisions();
+void update_collisions(game *);
 void update_ship(game *, asteroid *);
 
 void draw_game(game *);
@@ -44,9 +45,11 @@ void draw_shoots(game *);
 void draw_menu(game *);
 void draw_win(game *);
 void draw_lose(game *);
+void draw_ui(game *);
 
 void bound_position(vector *);
 void move_object(vector *, float, int);
 
+int count_digits(int);
 #endif	/* GAME_H */
 

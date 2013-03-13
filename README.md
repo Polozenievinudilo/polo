@@ -1,10 +1,10 @@
-Asteroidy
+Asteroids
 =========
 
-Projekt na PN.
+Game. University's project.
 
 To run:
     $ make
     $ ./asteroids
 
-
+Have fun.

@@ -3,6 +3,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <math.h>
+#include <stdio.h>
 
 #include "game.h"
 #include "config.h"
@@ -14,8 +15,8 @@ game* new_game(vector s) {
     g->Ship = new_ship(vec_times(s, 0.5));
     g->Size = s;
     g->status = Pause;
-    
-    // TODO: add asteroids
+    g->score = 0;
+
     int i;
     for(i = 0; i <= ASTEROID_COUNT; i++)
         new_asteroid(ASTEROID_MAX_LVL);
@@ -47,7 +48,7 @@ void update_game(game *g) {
         else {
             update_shoots();
             update_asteroids();
-            update_collisions();
+            update_collisions(g);
 
             update_ship(g, first_a);
         }
@@ -61,6 +62,7 @@ void draw_game(game *g) {
     if(g->status == Pause || g->status == Win || g->status == Lose)
         draw_menu(g);
     else if(g->status != Quit) {
+        draw_ui(g);
         draw_ship(g);
         draw_shoots(g);
         draw_asteroids(g);
@@ -180,6 +182,30 @@ void draw_menu(game *g) {
                  ALLEGRO_ALIGN_LEFT, msg);
 }
 
+void draw_ui(game *g) {
+    ALLEGRO_TRANSFORM trans;
+    al_identity_transform(&trans);
+    al_use_transform(&trans);
+    
+    int x, y;
+    char *msg;
+    msg = malloc(8*sizeof(char));
+    sprintf(msg, "Life: %d", g->Ship.life);
+    
+    x = 10;
+    y = 10;
+    al_draw_text(ttf_font, al_map_rgb(200, 200, 200), x, y,
+                 ALLEGRO_ALIGN_LEFT, msg);
+    
+    free(msg);
+    
+    msg = malloc((8 + count_digits(g->score))*sizeof(char));
+    sprintf(msg, "Score: %d", g->score);
+    x += 150;
+    al_draw_text(ttf_font, al_map_rgb(200, 200, 200), x, y,
+                 ALLEGRO_ALIGN_LEFT, msg);
+}
+
 void bound_position(vector *p) {
     while(p->x > 640.0) {
         p->x -= 640.0;
@@ -201,15 +227,16 @@ void move_object(vector *pos, float angle, int speed) {
     bound_position(pos);
 }
 
-void update_collisions() {
+void update_collisions(game *g) {
     asteroid *shot = hit_shoot(first_s, first_a);
     if(shot != NULL) {
+        g->score += 4-shot->lvl;
         split_asteroid(shot);
     }
 }
 
 void update_ship(game *g, asteroid *a) {
-    if(g->Ship.time >= 0)
+    if(g->Ship.time > 0)
         g->Ship.time -= 0.1;
     
     if(collision(a, g->Ship.position) && g->Ship.time <= 0) {
@@ -218,4 +245,15 @@ void update_ship(game *g, asteroid *a) {
         g->Ship.position = vec_times(g->Size, 0.5);
         g->Ship.time = 5;
     }
+}
+
+int count_digits(int n) {
+    int c = 0;
+    while(n != 0) {
+        c++;
+        n /= 10;
+    }
+    if(n == 0) c++;
+    
+    return c;
 }

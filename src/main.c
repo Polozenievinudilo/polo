@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
     screen.x = DISPLAY_WIDTH;
     screen.y = DISPLAY_HEIGHT;
     
-    int i;
+    int i, scored, lifed, statused;
     
     game *Game = new_game(screen);
     
@@ -130,8 +130,13 @@ int main(int argc, char** argv) {
                         if(Game->status == Pause)
                             Game->status = Play;
                         else if(Game->status == Lose || Game->status == Win) {
+                            scored = Game->score; lifed = Game->Ship.life; statused = Win;
                             del_game(Game);
                             Game = new_game(screen);
+                            if(statused == Win) {
+                                Game->score = scored;
+                                Game->Ship.life = lifed;
+                            }
                             Game->status = Play;
                         }
                             
@@ -139,7 +144,7 @@ int main(int argc, char** argv) {
                     case ALLEGRO_KEY_ESCAPE:
                         if(Game->status == Play) {
                             Game->status = Pause;
-                        } else if (Game->status == Pause || Game->status == Lose || Game->status == Win) {
+                        } else if (Game->status != Play) {
                             Game->status = Quit;
                         }
                         break;
