@@ -130,7 +130,7 @@ int main(int argc, char** argv) {
                         if(Game->status == Pause)
                             Game->status = Play;
                         else if(Game->status == Lose || Game->status == Win) {
-                            scored = Game->score; lifed = Game->Ship.life; statused = Win;
+                            scored = Game->score; lifed = Game->Ship.life; statused = Game->status;
                             del_game(Game);
                             Game = new_game(screen);
                             if(statused == Win) {
