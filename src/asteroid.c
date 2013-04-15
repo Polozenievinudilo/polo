@@ -11,8 +11,8 @@ asteroid *new_asteroid(int lvl) {
     
     a->lvl = lvl;
     
-    a->position.x = (float)(rand() % DISPLAY_WIDTH);
-    a->position.y = (float)(rand() % DISPLAY_HEIGHT);
+    a->position.x = (float)(rand() % 640);//atoi(get_config("display_width")));
+    a->position.y = (float)(rand() % 640);//atoi(get_config("display_height")));
     a->angle = (float)rand();
     
     vector rad = new_vector();

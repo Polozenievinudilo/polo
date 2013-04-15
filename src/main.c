@@ -21,12 +21,6 @@
 #include "shooter.h"
 #include "asteroid.h"
 
-/*
- * 
- */
-
-#define FPS 60
-
 int main(int argc, char** argv) {
     srand(time(NULL));
     
@@ -38,6 +32,11 @@ int main(int argc, char** argv) {
     first_a = NULL;
     // }
     
+    read_config();
+
+    int DISPLAY_WIDTH = get_config("display_width") != NULL ? atoi(get_config("display_width")) : 640;
+    int DISPLAY_HEIGHT = get_config("display_height") != NULL ? atoi(get_config("display_height")) : 480;
+        
     vector screen;
     screen.x = DISPLAY_WIDTH;
     screen.y = DISPLAY_HEIGHT;
@@ -114,10 +113,7 @@ int main(int argc, char** argv) {
             }
             if(al_key_down(keys, ALLEGRO_KEY_UP)) {
                 move_object(&Game->Ship.position, Game->Ship.angle, Game->Ship.speed);
-            }
-            
-            
-            
+            }            
         }
         
         al_get_next_event(event_queue, &ev);
@@ -130,7 +126,7 @@ int main(int argc, char** argv) {
                         if(Game->status == Pause)
                             Game->status = Play;
                         else if(Game->status == Lose || Game->status == Win) {
-                            scored = Game->score; lifed = Game->Ship.life; statused = Game->status;
+                            scored = Game->score; lifed = Game->Ship.life; statused = Win;
                             del_game(Game);
                             Game = new_game(screen);
                             if(statused == Win) {
@@ -142,14 +138,34 @@ int main(int argc, char** argv) {
                             
                         break;
                     case ALLEGRO_KEY_ESCAPE:
-                        if(Game->status == Play) {
+                        if(Game->status == Play || Game->status == Config) {
                             Game->status = Pause;
                         } else if (Game->status != Play) {
                             Game->status = Quit;
                         }
                         break;
-                    case ALLEGRO_KEY_S:
-                        
+                    case ALLEGRO_KEY_C:
+                        if(Game->status == Pause || Game->status == Lose || Game->status == Win) {
+                            Game->status = Config;
+                        }
+                        break;
+                    case ALLEGRO_KEY_DOWN:
+                        if(Game->status == Config)
+                            inc_config_pos();
+                        break;
+                    case ALLEGRO_KEY_UP:
+                        if(Game->status == Config)
+                            inc_config_pos();
+                        break;
+                    case ALLEGRO_KEY_LEFT:
+                        if(Game->status == Config) {
+                            add_to_config(0);
+                        }
+                        break;
+                    case ALLEGRO_KEY_RIGHT:
+                        if(Game->status == Config) {
+                            add_to_config(1);
+                        }
                         break;
                 }
             }
@@ -161,6 +177,7 @@ int main(int argc, char** argv) {
         
     }
     
+    save_config();
     del_game(Game);
     al_destroy_timer(timer);
     al_destroy_display(display);

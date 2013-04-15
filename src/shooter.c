@@ -35,7 +35,6 @@ void update_shoots() {
         }
         
         move_object(&pt->position, pt->angle, pt->speed);
-        
         pt = pt->next;
     }
     

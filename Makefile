@@ -4,6 +4,7 @@ SOURCES=src/vector.c \
         src/asteroid.c \
         src/ship.c \
         src/shooter.c \
+		src/config.c \
         src/game.c \
         src/main.c
 OBJ_DIR=obj

@@ -10,6 +10,22 @@
 #include "asteroid.h"
 #include "shooter.h"
 
+int config_pos = 0;
+ALLEGRO_FONT *ttf_font; // font to use
+
+void inc_config_pos() {
+    if(++config_pos > 1) config_pos = 0;
+}
+
+void add_to_config(int a) {
+    if(config_pos == 0) {
+        change_config("display_width", a ? 10 : -10);
+    }
+    else if(config_pos == 1) {
+        change_config("display_height", a ? 10 : -10);
+    }
+}
+
 game* new_game(vector s) {
     game *g = malloc(sizeof(game));
     g->Ship = new_ship(vec_times(s, 0.5));
@@ -61,12 +77,42 @@ void draw_game(game *g) {
     al_clear_to_color(BACKGROUND_COLOR);
     if(g->status == Pause || g->status == Win || g->status == Lose)
         draw_menu(g);
+    else if(g->status == Config)
+        draw_config(g);
     else if(g->status != Quit) {
         draw_ui(g);
         draw_ship(g);
         draw_shoots(g);
         draw_asteroids(g);
     }
+}
+
+void draw_config(game *g) {
+    ALLEGRO_TRANSFORM trans;
+    al_identity_transform(&trans);
+    al_use_transform(&trans);
+    
+    int x, y;
+    x = (g->Size.x - 150) / 2;
+    y = 0;
+    al_draw_text(ttf_font, al_map_rgb(200, 200, 200), x, y, ALLEGRO_ALIGN_LEFT, "CONFIGURATION");
+    
+    if(get_config("display_width") == NULL) return;
+    
+    x = 100;
+    y = 100;
+    char msg[22];
+    sprintf(msg, "DISPLAY WIDTH: %d", atoi(get_config("display_width")));
+    al_draw_text(ttf_font, al_map_rgb(200, 200, 200), x, y, ALLEGRO_ALIGN_LEFT, msg);
+    
+    x = 100;
+    y = 125;
+    sprintf(msg, "DISPLAY HEIGHT: %d", atoi(get_config("display_height")));
+    al_draw_text(ttf_font, al_map_rgb(200, 200, 200), x, y, ALLEGRO_ALIGN_LEFT, msg);
+    
+    al_draw_pixel(80, 100 + config_pos * 25, SHOOT_COLOR); // TODO: draw bigger shape
+    
+    
 }
 
 void draw_ship(game *game) {
@@ -207,17 +253,19 @@ void draw_ui(game *g) {
 }
 
 void bound_position(vector *p) {
-    while(p->x > 640.0) {
-        p->x -= 640.0;
+    float x = atoi(get_config("display_width")), y = atoi(get_config("display_height"));
+    
+    while(p->x > x) {
+        p->x -= x;
     }
     while(p->x < 0.0) {
-        p->x += 640.0;
+        p->x += x;
     }
-    while(p->y > 480.0) {
-        p->y -= 480.0;
+    while(p->y > y) {
+        p->y -= y;
     }
     while(p->y < 0.0) {
-        p->y += 480.0;
+        p->y += y;
     }
 }
 

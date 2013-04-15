@@ -11,7 +11,6 @@
 #include <stdbool.h>
 
 #include "vector.h"
-#include "config.h"
 
 typedef struct asteroid {
     float angle, // direction of an asteroid

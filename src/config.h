@@ -12,9 +12,6 @@
 
 #define FPS 60
 
-#define DISPLAY_WIDTH 640
-#define DISPLAY_HEIGHT 480
-
 #define BACKGROUND_COLOR al_map_rgb(0, 0, 0)
 
 #define SHIP_COLOR al_map_rgb(250, 210, 0)
@@ -28,6 +25,19 @@
 #define ASTEROID_MAX_LVL 3
 #define ASTEROID_COUNT 2
 #define ASTEROID_COLOR al_map_rgb(0,0,255)
+
+typedef struct config {
+    char *key, *value;
+    struct config *next;
+} config;
+
+void push(char *, char *);
+config *pop();
+char *get_config(char *);
+void change_config(char *, int);
+
+void save_config();
+void read_config();
 
 #endif	/* CONFIG_H */
 

@@ -18,7 +18,7 @@
 #include "asteroid.h"
 
 typedef enum {
-    Quit, Pause, Win, Lose, Play
+    Quit, Pause, Win, Lose, Play, Config
 } status;
 
 typedef struct game {
@@ -27,8 +27,6 @@ typedef struct game {
     vector Size;
     status status; // status of a game (Play, Pause, Win ...)
 } game;
-
-ALLEGRO_FONT *ttf_font; // font to use
 
 game* new_game(vector); // creates a new game | param: vector - size of a screen | return address to a game
 void del_game(game *); // deletes a game | params: pointer to a game
@@ -45,10 +43,15 @@ void draw_asteroids(game *);
 void draw_shoots(game *);
 void draw_menu(game *);
 void draw_ui(game *);
+void draw_config(game *);
 
 void bound_position(vector *); // limits positions to those given while creating a new game
 void move_object(vector *, float, int); // moves a object (asteroid, ship, bullet) | params: address to position, float direction, int speed
 
 int count_digits(int); // count how many digits there is in an integer | params: int number | returns: count of digits in number
+
+void inc_config_pos();
+void add_to_config(int);
+
 #endif	/* GAME_H */
 
