@@ -110,9 +110,7 @@ void draw_config(game *g) {
     sprintf(msg, "DISPLAY HEIGHT: %d", atoi(get_config("display_height")));
     al_draw_text(ttf_font, al_map_rgb(200, 200, 200), x, y, ALLEGRO_ALIGN_LEFT, msg);
     
-    al_draw_pixel(80, 100 + config_pos * 25, SHOOT_COLOR); // TODO: draw bigger shape
-    
-    
+    al_draw_circle(80, 110 + config_pos * 25, 3.0, SHOOT_COLOR, 1.5);    
 }
 
 void draw_ship(game *game) {
