@@ -14,9 +14,10 @@
 #include <allegro5/keyboard.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include <math.h>
 
 #include "game.h"
-#include "vector.h"
+#include "point.h"
 #include "config.h"
 #include "shooter.h"
 #include "asteroid.h"
@@ -37,9 +38,9 @@ int main(int argc, char** argv) {
     int DISPLAY_WIDTH = get_config("display_width") != NULL ? atoi(get_config("display_width")) : 640;
     int DISPLAY_HEIGHT = get_config("display_height") != NULL ? atoi(get_config("display_height")) : 480;
         
-    vector screen;
-    screen.x = DISPLAY_WIDTH;
-    screen.y = DISPLAY_HEIGHT;
+    point *screen = calloc(1, sizeof(point));
+    screen->x = DISPLAY_WIDTH;
+    screen->y = DISPLAY_HEIGHT;
     
     int i, scored, lifed, statused;
     
@@ -48,7 +49,7 @@ int main(int argc, char** argv) {
     ALLEGRO_DISPLAY *display = NULL;
     ALLEGRO_EVENT_QUEUE *event_queue = NULL, *timer_queue = NULL;
     ALLEGRO_TIMER *timer = NULL;
-    ALLEGRO_KEYBOARD_STATE *keys = malloc(sizeof(ALLEGRO_KEYBOARD_STATE));
+    ALLEGRO_KEYBOARD_STATE *keys = calloc(1, sizeof(ALLEGRO_KEYBOARD_STATE));
     
     bool exit = false;
     
@@ -106,13 +107,13 @@ int main(int argc, char** argv) {
         al_wait_for_event(timer_queue, &timerev);
         if(Game->status == Play) {
             if(al_key_down(keys, ALLEGRO_KEY_RIGHT)) {
-                turn_right(&Game->Ship);
+                turn_right(Game->Ship);
             }
             if(al_key_down(keys, ALLEGRO_KEY_LEFT)) {
-                turn_left(&Game->Ship);
+                turn_left(Game->Ship);
             }
             if(al_key_down(keys, ALLEGRO_KEY_UP)) {
-                move_object(&Game->Ship.position, Game->Ship.angle, Game->Ship.speed);
+                move_object(Game->Ship->position, Game->Ship->angle, Game->Ship->speed);
             }            
         }
         
@@ -120,18 +121,19 @@ int main(int argc, char** argv) {
             if(ev.type == ALLEGRO_EVENT_KEY_DOWN) {
                 switch(ev.keyboard.keycode) {
                     case ALLEGRO_KEY_SPACE:
-                        if(Game->status == Play) new_shoot(&Game->Ship);
+                        if(Game->status == Play) new_shoot(Game->Ship);
                         break;
                     case ALLEGRO_KEY_ENTER:
                         if(Game->status == Pause)
                             Game->status = Play;
                         else if(Game->status == Lose || Game->status == Win) {
-                            scored = Game->score; lifed = Game->Ship.life; statused = Win;
+                            scored = Game->score; lifed = Game->Ship->life; statused = Game->status;
                             del_game(Game);
                             Game = new_game(screen);
+                            Game->Ship = new_ship(p_times(screen, 0.5));
                             if(statused == Win) {
                                 Game->score = scored;
-                                Game->Ship.life = lifed;
+                                Game->Ship->life = lifed;
                             }
                             Game->status = Play;
                         }
@@ -178,11 +180,14 @@ int main(int argc, char** argv) {
     }
     
     save_config();
+    del_config();
     del_game(Game);
     al_destroy_timer(timer);
     al_destroy_display(display);
     al_destroy_event_queue(event_queue);
     al_destroy_event_queue(timer_queue);
+    free(keys);
+    free(screen);
 
     return (EXIT_SUCCESS);
 }

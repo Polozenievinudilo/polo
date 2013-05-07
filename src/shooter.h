@@ -9,13 +9,13 @@
 #define	SHOOTER_H
 
 #include "ship.h"
-#include "vector.h"
+#include "point.h"
 #include "asteroid.h"
 
 typedef struct shoot {
     float angle, // direction of a bullet
           time; // time to disappear
-    vector position;
+    point *position;
     int speed; // speed of a bullet
     struct shoot *next, // next bullet
                  *prev; // previous bullet

@@ -14,7 +14,7 @@
 
 #include "ship.h"
 #include "shooter.h"
-#include "vector.h"
+#include "point.h"
 #include "asteroid.h"
 
 typedef enum {
@@ -23,12 +23,12 @@ typedef enum {
 
 typedef struct game {
     int score;
-    ship Ship;
-    vector Size;
+    ship *Ship;
+    point *Size;
     status status; // status of a game (Play, Pause, Win ...)
 } game;
 
-game* new_game(vector); // creates a new game | param: vector - size of a screen | return address to a game
+game* new_game(point *); // creates a new game | param: point - size of a screen | return address to a game
 void del_game(game *); // deletes a game | params: pointer to a game
 bool font(); // run allegro font and ttf addons | returns: true if ran font and ttf correctly, false else
 
@@ -45,8 +45,8 @@ void draw_menu(game *);
 void draw_ui(game *);
 void draw_config(game *);
 
-void bound_position(vector *); // limits positions to those given while creating a new game
-void move_object(vector *, float, int); // moves a object (asteroid, ship, bullet) | params: address to position, float direction, int speed
+void bound_position(point *); // limits positions to those given while creating a new game
+void move_object(point *, float, int); // moves a object (asteroid, ship, bullet) | params: address to position, float direction, int speed
 
 int count_digits(int); // count how many digits there is in an integer | params: int number | returns: count of digits in number
 

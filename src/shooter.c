@@ -7,8 +7,11 @@
 #include "game.h"
 
 shoot* new_shoot(ship *sh) {
-    shoot *new = malloc(sizeof(shoot));
-    new->position = sh->position;
+    shoot *new = calloc(1, sizeof(shoot));
+    new->position = new_point();
+    new->position->x = sh->position->x;
+    new->position->y = sh->position->y;
+    
     new->angle = sh->angle;
     new->speed = SHOOT_SPEED;
     new->time = SHOOT_TTL;
@@ -34,7 +37,7 @@ void update_shoots() {
             break;
         }
         
-        move_object(&pt->position, pt->angle, pt->speed);
+        move_object(pt->position, pt->angle, pt->speed);
         pt = pt->next;
     }
     
@@ -51,6 +54,7 @@ void del_shoot(shoot *s) {
     else
         last_s = s->prev;
     
+    free(s->position);
     free(s);
 }
 

@@ -7,18 +7,20 @@
 #include "game.h"
 
 asteroid *new_asteroid(int lvl) {
-    asteroid *a = malloc(sizeof(asteroid));
+    asteroid *a = calloc(1, sizeof(asteroid));
+    a->position = new_point();
     
     a->lvl = lvl;
     
-    a->position.x = (float)(rand() % atoi(get_config("display_width")));
-    a->position.y = (float)(rand() % atoi(get_config("display_height")));
+    a->position->x = (float)(rand() % atoi(get_config("display_width")));
+    a->position->y = (float)(rand() % atoi(get_config("display_height")));
     a->angle = (float)rand();
     
-    vector rad = new_vector();
-    rad.x = a->position.x + a->lvl*10;
-    rad.y = a->position.y;
-    a->radius = dist(&a->position, &rad);
+    point *rad = new_point();
+    rad->x = a->position->x + a->lvl*10;
+    rad->y = a->position->y;
+    
+    a->radius = dist(a->position, rad);
     
     a->speed = ASTEROID_SPEED;
     
@@ -43,6 +45,7 @@ void del_asteroid(asteroid *a) {
     else
         last_a = a->prev;
     
+    free(a->position);
     free(a);
 }
 
@@ -61,7 +64,9 @@ void split_asteroid(asteroid *a) {
     a->lvl--;
     while(l--) {
         new = new_asteroid(a->lvl);
-        new->position = a->position;
+        new->position->x = a->position->x;
+        new->position->y = a->position->y;
+        
         new->angle = a->angle * rand();
         new->speed += 0.5;
     }
@@ -75,22 +80,22 @@ void update_asteroids() {
             del_asteroid(pt);
             break;
         }
-        move_object(&pt->position, pt->angle, pt->speed);
+        move_object(pt->position, pt->angle, pt->speed);
         
         pt = pt->next;
     }
 }
 
-bool point_in_asteroid(asteroid *a, vector *v) {
-    if(dist(v, &a->position) <= a->radius * 1.2)
+bool point_in_asteroid(asteroid *a, point *v) {
+    if(dist(v, a->position) <= a->radius * 1.2)
         return true;
     return false;
 }
 
-asteroid *collision(asteroid *a, vector p) {
+asteroid *collision(asteroid *a, point *p) {
     asteroid *pt = a;
     while(pt != NULL) {
-        if(point_in_asteroid(pt, &p))
+        if(point_in_asteroid(pt, p))
             return pt;
         
         pt = pt->next;

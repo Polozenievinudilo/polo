@@ -6,7 +6,7 @@
 config *first_c = NULL;
 
 void push(char *k, char *v) {
-    config *new = malloc(sizeof(config));
+    config *new = calloc(1, sizeof(config));
     new->key = k;
     new->value = v;
     new->next = first_c;
@@ -16,11 +16,19 @@ void push(char *k, char *v) {
 
 config *pop() {
     config *r = first_c;
+    if(r == NULL) return NULL;
+    
+    free(first_c->key);
+    free(first_c->value);
     free(first_c);
     
     first_c = r->next;
     
     return r;
+}
+
+void del_config() {
+    while(pop() != NULL);
 }
 
 char *get_config(char *k) {
@@ -43,7 +51,9 @@ void save_config() {
     while(ptr != NULL) {
         //sprintf(line, "%s=%s\n", ptr->key, ptr->value);
         //fwrite(line, 1, sizeof(line), file);
-        fprintf(file, "%s=%s\n", ptr->key, ptr->value);
+        fprintf(file, "%s=%s", ptr->key, ptr->value);
+        if(ptr->next != NULL) fprintf(file, "\n");
+        
         ptr = ptr->next;
     }
     
@@ -59,8 +69,8 @@ void read_config() {
         while(fgets(line, sizeof(line), file) != NULL) {
             if(strchr(line, ch) != NULL) {
                 index = strchr(line, ch) - line;
-                k = malloc((index + 1) * sizeof(char));
-                v = malloc(5 * sizeof(char));
+                k = calloc(index + 1, sizeof(char));
+                v = calloc(5, sizeof(char));
 
                 for(i = 0; i < index; i++)
                     k[i] = line[i];
@@ -75,8 +85,16 @@ void read_config() {
                 push(k, v);
             }
         }
-        fclose(file);
+    } else {
+        file = fopen("configuration", "w");
+        if(file == NULL) {
+            perror("Error while reading configuration file!");
+            exit(1);
+        }
+        push("display_width", "640");
+        push("display_height", "480");
     }
+    fclose(file);
 }
 
 void change_config(char *k, int step) {

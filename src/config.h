@@ -38,6 +38,7 @@ void change_config(char *, int);
 
 void save_config();
 void read_config();
+void del_config();
 
 #endif	/* CONFIG_H */
 

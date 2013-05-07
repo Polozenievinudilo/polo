@@ -10,13 +10,13 @@
 
 #include <stdbool.h>
 
-#include "vector.h"
+#include "point.h"
 
 typedef struct asteroid {
     float angle, // direction of an asteroid
           speed,
           radius; // speed of an asteroid
-    vector position; // "vector.h"
+    point *position; // "point.h"
     int lvl;
     struct asteroid *next, // next asteroid
                     *prev; // previous asteroid
@@ -33,8 +33,8 @@ void split_asteroid(asteroid *); // splits an asteroid to more smaller asteroids
 
 void update_asteroids(); // update information about asteroids
 
-bool point_in_asteroid(asteroid *, vector *); // checks if a vector (point) is inside an asteroids | params: pointer to an asteroid, pointer to vector | returns: true or false
-asteroid *collision(asteroid *, vector); // checks if a vector is in collision with an asteroid | params: pointer to an asteroid, vector | returns: address of an asteroid
+bool point_in_asteroid(asteroid *, point *); // checks if a point is inside an asteroids | params: pointer to an asteroid, pointer to point | returns: true or false
+asteroid *collision(asteroid *, point *); // checks if a point is in collision with an asteroid | params: pointer to an asteroid, point | returns: address of an asteroid
 
 #endif	/* ASTEROID_H */
 

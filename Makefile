@@ -1,6 +1,6 @@
 CC=gcc
 LDFLAGS=-lallegro -lallegro_primitives -lallegro_font -lallegro_ttf -lallegro_color -lm
-SOURCES=src/vector.c \
+SOURCES=src/point.c \
         src/asteroid.c \
         src/ship.c \
         src/shooter.c \

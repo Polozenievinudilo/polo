@@ -1,13 +1,18 @@
 #include <math.h>
+#include <stdlib.h>
+
 #include "ship.h"
 
-ship new_ship(vector p) {
-    ship s;
-    s.position = p;
-    s.angle = 0.0;
-    s.speed = 3;
-    s.life = 3;
-    s.time = 3;
+ship *new_ship(point *p) {
+    ship *s = calloc(1, sizeof(ship));
+    s->position = new_point();
+    s->position->x = p->x;
+    s->position->y = p->y;
+    
+    s->angle = 0.0;
+    s->speed = 3;
+    s->life = 3;
+    s->time = 3;
     
     return s;
 }
