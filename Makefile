@@ -15,7 +15,7 @@ EXECUTABLE=asteroids
 
 all: $(EXECUTABLE) $(OBJECTS)
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) -o $@ $(LDFLAGS) $(OBJECTS)
+	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
 
 $(OBJECTS): obj/%.o : src/%.c
 	$(CC) -c $< -o $@
