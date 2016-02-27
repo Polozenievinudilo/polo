@@ -27,6 +27,7 @@ shoot *last_s; // last bullet
 shoot* new_shoot(ship *); // creates new bullet | params: ship which shot this bullet | returns: pointer to a bullet
 void update_shoots(); // updates information about bullets
 void del_shoot(shoot *); // deletes a bullet from list | params: pointer to a bullet
+void del_shoots(shoot *); // deletes a bullet from list | params: pointer to a bullet
 asteroid *hit_shoot(shoot *, asteroid *); // checks if a bullet hit an asteroid | params: a bullet, an asteroid to start searching | returns: address to an asteroid that has just been shot
 
 #endif	/* SHOOTER_H */
