@@ -196,11 +196,7 @@ void draw_menu(game *g) {
         al_draw_text(ttf_font, al_map_rgb(200, 200, 200), x, y, ALLEGRO_ALIGN_LEFT, msg);
     }
     
-    msg = "'c' to configure";
-    x = (g->Size->x - 640+100) / 2;
-    y = (g->Size->y + 5) / 2;
-    al_draw_text(ttf_font, al_map_rgb(200, 200, 200), x, y,
-                 ALLEGRO_ALIGN_LEFT, msg);
+    
     
     msg = "Enter to play";
     x = (g->Size->x - 640+100) / 2;
@@ -214,17 +210,7 @@ void draw_menu(game *g) {
     al_draw_text(ttf_font, al_map_rgb(200, 200, 200), x, y,
                  ALLEGRO_ALIGN_LEFT, msg);
     
-    msg = "Use the arrow keys to move and space to shoot";
-    y = g->Size->y - 130;
-    x = (g->Size->x - 640+100)/2;
-    al_draw_text(ttf_font, al_map_rgb(200, 200, 200), x, y,
-                 ALLEGRO_ALIGN_LEFT, msg);
     
-    msg = "If your ship is bold, you cannot be destroyed";
-    y = g->Size->y - 80;
-    x = (g->Size->x - 640+100)/2;
-    al_draw_text(ttf_font, al_map_rgb(200, 200, 200), x, y,
-                 ALLEGRO_ALIGN_LEFT, msg);
 }
 
 void draw_ui(game *g) {
